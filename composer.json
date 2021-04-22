@@ -1,0 +1,26 @@
+{
+    "name": "jrebs/easyship-php",
+    "description": "A PHP library to simplify integration with the Easyship API",
+    "keywords": ["easyship", "api", "php"],
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Justin Rebelo",
+            "homepage": "https://rebelo.dev/"
+        }
+    ],
+    "require": {
+        "php": ">=7.2",
+        "firebase/php-jwt": "^5.2",
+        "guzzlehttp/guzzle": "^7.3"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "Easyship\\": "src/"
+        }
+    }
+}

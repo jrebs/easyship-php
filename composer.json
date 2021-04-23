@@ -16,11 +16,17 @@
         "guzzlehttp/guzzle": "^7.3"
     },
     "require-dev": {
-        "phpunit/phpunit": "^9.5"
+        "phpunit/phpunit": "^9.5",
+        "fakerphp/faker": "^1.14"
     },
     "autoload": {
         "psr-4": {
             "Easyship\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Easyship\\Tests\\": "tests/"
         }
     }
 }

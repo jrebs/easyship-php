@@ -1,5 +1,7 @@
 # easyship-php
 
+[![codecov](https://codecov.io/gh/jrebs/easyship-php/branch/master/graph/badge.svg?token=OK5HAPJ1YZ)](https://codecov.io/gh/jrebs/easyship-php)
+
 A PHP library to make PHP calls to the [Easyship](https://www.easyship.com)
 API. This library just wraps some of the repetitive/ugly work like creating
 an HTTP client and building the requests. The end user will just need to
@@ -23,8 +25,11 @@ this library to support that version as well.
 
 Install with [composer](https://getcomposer.org).
 ```
-composer require jrebs/easyship-php
+composer require  --no-dev jrebs/easyship-php
 ```
+
+If you omit the `--no-dev` argument, then you will also get `phpunit` and
+`fakerphp` installed for running the provided unit tests.
 
 # Usage
 
@@ -105,7 +110,6 @@ $api->setApiHost('http://localhost:8080/');
 ## Roadmap
 
 * **Coming Soon**
-  *  [phpunit](https://phpunit.de/) tests
   * supplemental package to for integrating into [Laravel](https://laravel.com) applications
   * add classes to handle validating and dispatching Easyship webhooks
 * **TBD**

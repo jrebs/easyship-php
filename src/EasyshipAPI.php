@@ -7,8 +7,9 @@ use Easyship\Modules\Labels;
 use Easyship\Modules\Pickups;
 use Easyship\Modules\Rates;
 use Easyship\Modules\Shipments;
-use Easyship\Modules\Track;
+use Easyship\Modules\Tracking;
 use GuzzleHttp\Client;
+use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\ResponseInterface;
 
 class EasyshipAPI
@@ -130,6 +131,18 @@ class EasyshipAPI
     }
 
     /**
+     * Pass in a compatible HTTP client object to be used.
+     *
+     * @param ClientInterface $client
+     *
+     * @return void
+     */
+    public function setClient(ClientInterface $client): void
+    {
+        $this->client = $client;
+    }
+
+    /**
      * @return \Easyship\Modules\Categories
      */
     public function categories(): Categories
@@ -170,10 +183,10 @@ class EasyshipAPI
     }
 
     /**
-     * @return \Easyship\Modules\Track
+     * @return \Easyship\Modules\Tracking
      */
-    public function track(): Track
+    public function tracking(): Tracking
     {
-        return new Track($this);
+        return new Tracking($this);
     }
 }

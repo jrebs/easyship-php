@@ -5,7 +5,7 @@ namespace Easyship\Modules;
 use Easyship\Module;
 use Psr\Http\Message\ResponseInterface;
 
-class Track extends Module
+class Tracking extends Module
 {
     /**
      * Get shipment tracking status

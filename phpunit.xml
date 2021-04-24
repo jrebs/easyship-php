@@ -4,6 +4,10 @@
     <include>
         <directory suffix=".php">./src</directory>
     </include>
+    <exclude>
+        <directory suffix=".php">src/Exceptions</directory>
+        <file>src/Webhooks/ListenerInterface.php</file>
+    </exclude>
     <report>
         <clover outputFile="clover.xml"/>
     </report>

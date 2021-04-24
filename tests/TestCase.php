@@ -9,10 +9,8 @@ abstract class TestCase extends BaseTestCase
 {
     protected $faker;
 
-    public function __construct()
+    protected function setUp(): void
     {
         $this->faker = Faker::create();
-
-        parent::__construct();
     }
 }

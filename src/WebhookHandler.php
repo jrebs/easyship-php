@@ -50,7 +50,7 @@ class WebhookHandler
      */
     public function handle(string $signature, array $payload): void
     {
-        if ($this->validateSignature($signature)) {
+        if (!$this->validateSignature($signature)) {
             // You can circumvent the following behaviour by overriding the
             // webhookSignatureInvalid() method and exiting before execution
             // would return to this point.
@@ -58,7 +58,7 @@ class WebhookHandler
             exit;
         }
         $method = $this->getEventMethod($payload['event_type'] ?? null);
-        if ($this->eventMethodExists($method)) {
+        if (!$this->eventMethodExists($method)) {
             // You can circumvent the following behaviour by overriding the
             // webhookEventTypeInvalid() method and exiting before execution
             // would return to this point.

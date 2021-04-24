@@ -12,12 +12,6 @@ use TypeError;
 
 class WebhookHandlerTest extends TestCase
 {
-    public function test_constructor_requires_a_key()
-    {
-        $this->expectException(\ArgumentCountError::class);
-        $handler = new Handler();
-    }
-
     public function test_sets_jwt_validator()
     {
         $handler = new Handler($this->faker->word);

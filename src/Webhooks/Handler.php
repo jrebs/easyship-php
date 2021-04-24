@@ -39,7 +39,7 @@ class Handler
     /**
      * @param string $secretKey
      */
-    public function __construct(string $secretKey)
+    public function __construct(string $secretKey = null)
     {
         $this->secretKey = $secretKey;
     }
@@ -101,9 +101,6 @@ class Handler
     public function fireEvent(string $eventType, array $payload): void
     {
         if (!array_key_exists($eventType, self::$listeners)) {
-            return;
-        }
-        if (!count(self::$listeners[$eventType])) {
             return;
         }
         foreach (self::$listeners[$eventType] as $listener) {

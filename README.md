@@ -3,10 +3,19 @@
 [![codecov](https://codecov.io/gh/jrebs/easyship-php/branch/master/graph/badge.svg?token=OK5HAPJ1YZ)](https://codecov.io/gh/jrebs/easyship-php)
 
 A PHP library to make PHP calls to the [Easyship](https://www.easyship.com)
-API. This library just wraps some of the repetitive/ugly work like creating
-an HTTP client and building the requests. The end user will just need to
+API. This library wraps some of the repetitive/ugly work like creating
+an HTTP client, building and sending requests. The end user will just need to
 assemble arrays of the appropriate payload data and then evaluate the
-response.
+responses.
+
+This package comprises two distinct sets of functionality. The first is the
+API communication component, which allows the user to easily write code for
+sending outbound API calls to the Easyship API. The second is support for
+receiving inbound webhook posts from Easyship, allowing the user to easily
+pass those calls into a dispatching handler and have their payloads passed
+off to custom code attached to the handler using listeners. Webhooks are an
+optional feature of Easyship's API and there's you can completely ignore them
+if it's not part of your implementation plan.
 
 #### API Version
 
@@ -17,6 +26,7 @@ this library to support that version as well.
 * [Installation](#installation)
 * [Usage](#usage)
 * [Configuration](#configuration)
+* [Webhooks](#webhooks)
 * [Roadmap](#roadmap)
 * [Support](#support)
 * [License](#license)
@@ -107,11 +117,14 @@ calls you submit will be sent to your own server for inspection.
 $api->setApiHost('http://localhost:8080/');
 ```
 
+## Webhooks
+
+See [WEBHOOKS.md](WEBHOOKS.md).
+
 ## Roadmap
 
 * **Coming Soon**
   * supplemental package to for integrating into [Laravel](https://laravel.com) applications
-  * add classes to handle validating and dispatching Easyship webhooks
 * **TBD**
   * support for API `v2` once it is ready for production use.
   * possibly support other HTTP clients by coding against a PSR interface

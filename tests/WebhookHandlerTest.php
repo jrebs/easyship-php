@@ -3,39 +3,24 @@
 namespace Easyship\Tests;
 
 use Ahc\Jwt\JWT;
-use Easyship\WebhookHandler;
+use Easyship\Exceptions\InvalidPayloadException;
+use Easyship\Exceptions\InvalidSignatureException;
+use Easyship\Webhooks\Handler;
+use Easyship\Webhooks\ListenerInterface;
+use Throwable;
+use TypeError;
 
 class WebhookHandlerTest extends TestCase
 {
     public function test_constructor_requires_a_key()
     {
         $this->expectException(\ArgumentCountError::class);
-        $handler = new WebhookHandler();
-    }
-
-    public function test_translates_event_type_to_method_name()
-    {
-        $handler = new WebhookHandler($this->faker->word);
-        $this->assertEquals(
-            'shipmentLabelFailed',
-            $handler->getEventMethod('shipment.label.failed')
-        );
-        $this->assertEquals(
-            'firstSecondThirdFourth',
-            $handler->getEventMethod('first.second.third.fourth')
-        );
-    }
-
-    public function test_event_method_existence_validates()
-    {
-        $handler = new WebhookHandler($this->faker->word);
-        $this->assertFalse($handler->eventMethodExists($this->faker->word));
-        $this->assertTrue($handler->eventMethodExists('shipmentCancelled'));
+        $handler = new Handler();
     }
 
     public function test_sets_jwt_validator()
     {
-        $handler = new WebhookHandler($this->faker->word);
+        $handler = new Handler($this->faker->word);
         // Incorrect object type throws TypeError
         $this->expectException(\TypeError::class);
         $handler->setJwtValidator(new \stdClass());
@@ -51,7 +36,7 @@ class WebhookHandlerTest extends TestCase
 
     public function test_gets_jwt_validator()
     {
-        $handler = new WebhookHandler($this->faker->word);
+        $handler = new Handler($this->faker->word);
         $jwt = new JWT($this->faker->word);
         $handler->setJwtValidator($jwt);
         $this->assertEquals($jwt, $handler->getJwtValidator());
@@ -61,10 +46,9 @@ class WebhookHandlerTest extends TestCase
     {
         $key = $this->faker->word;
         $signature = $this->faker->word;
-        $handler = new WebhookHandler($key);
-        $this->assertFalse(
-            $handler->validateSignature($signature)
-        );
+        $handler = new Handler($key);
+        $this->expectException(InvalidSignatureException::class);
+        $handler->validateSignature($signature);
     }
 
     public function test_validates_signatures_good()
@@ -76,23 +60,80 @@ class WebhookHandlerTest extends TestCase
             ->method('decode')
             ->with($signature)
             ->willReturn([]);
-        $handler = new WebhookHandler($key);
+        $handler = new Handler($key);
         $handler->setJwtValidator($jwt);
-        $this->assertTrue(
-            $handler->validateSignature($signature)
+        $thrown = false;
+        try {
+            $handler->validateSignature($signature);
+        } catch (Throwable $e) {
+            $thrown = true;
+        }
+        $this->assertFalse($thrown);
+    }
+
+    public function test_extracts_event_type_from_payload()
+    {
+        $payload = ['event_type' => 'shipment.cancelled'];
+        $handler = new Handler($this->faker->word);
+        $this->assertEquals(
+            'shipment.cancelled',
+            $handler->extractEventTypeFromPayload($payload)
         );
     }
 
-    public function test_required_methods_exist()
+    public function test_throws_on_unexpected_event_type_extraction()
     {
-        $handler = new WebhookHandler($this->faker->word);
-        $this->assertTrue(method_exists($handler, 'webhookSignatureInvalid'));
-        $this->assertTrue(method_exists($handler, 'webhookEventTypeInvalid'));
-        $this->assertTrue(method_exists($handler, 'shipmentLabelCreated'));
-        $this->assertTrue(method_exists($handler, 'shipmentLabelFailed'));
-        $this->assertTrue(method_exists($handler, 'shipmentCancelled'));
-        $this->assertTrue(method_exists($handler, 'shipmentTrackingCheckpointsCreated'));
-        $this->assertTrue(method_exists($handler, 'shipmentTrackingStatusChanged'));
-        $this->assertTrue(method_exists($handler, 'shipmentWarehouseStateUpdated'));
+        $payload = ['event_type' => 'test.event'];
+        $handler = new Handler($this->faker->word);
+        $this->expectException(InvalidPayloadException::class);
+        $handler->extractEventTypeFromPayload($payload);
+    }
+
+    public function test_adds_listeners()
+    {
+        $listener = new class implements ListenerInterface {
+            public function fire(array $payload): void { }
+        };
+        Handler::addListener('test.event', $listener);
+        $this->expectException(TypeError::class);
+        Handler::addListener('bad.type', new \stdClass());
+    }
+
+    public function test_fires_events()
+    {
+        $handler = new Handler($this->faker->word);
+        // bad event type
+        $this->assertNull($handler->fireEvent('invalid.event', []));
+        // good event type with no listeners
+        $this->assertNull($handler->fireEvent('shipment.cancelled', []));
+        // good event type with a mocked listener
+        $payload = ['foo' => $this->faker->word];
+        $mock = $this->createMock(TestListener::class);
+        $mock->expects($this->once())
+            ->method('fire')
+            ->with($payload);
+        Handler::addListener('test.event', $mock);
+        $handler->fireEvent('test.event', $payload);
+    }
+
+    public function test_handles_events()
+    {
+        $payload = ['event_type' => 'shipment.cancelled'];
+        $mock = $this->createMock(TestListener::class);
+        $mock->expects($this->once())
+            ->method('fire')
+            ->with($payload);
+        Handler::addListener('shipment.cancelled', $mock);
+        $handler = new Handler($this->faker->word);
+        $key = $this->faker->word;
+        $signature = $this->faker->word;
+        $jwt = $this->createMock(JWT::class);
+        $jwt->expects($this->once())
+            ->method('decode')
+            ->with($signature)
+            ->willReturn([]);
+        $handler = new Handler($key);
+        $handler->setJwtValidator($jwt);
+        $handler->handle($signature, $payload);
     }
 }

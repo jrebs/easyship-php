@@ -1,6 +1,7 @@
 # easyship-php
 
 [![codecov](https://codecov.io/gh/jrebs/easyship-php/branch/master/graph/badge.svg?token=OK5HAPJ1YZ)](https://codecov.io/gh/jrebs/easyship-php)
+[![License](https://img.shields.io/packagist/l/jrebs/easyship-php.svg?style=flat-square)](https://packagist.org/packages/jrebs/easyship-php)
 
 A PHP library to make PHP calls to the [Easyship](https://www.easyship.com)
 API. This library wraps some of the repetitive/ugly work like creating
@@ -33,13 +34,24 @@ this library to support that version as well.
 
 ## Installation
 
-Install with [composer](https://getcomposer.org).
-```
-composer require  --no-dev jrebs/easyship-php
+Unless using [Laravel](https://laravel.com), install with
+[composer](https://getcomposer.org) like normal:
+
+```sh
+composer require jrebs/easyship-php
 ```
 
-If you omit the `--no-dev` argument, then you will also get `phpunit` and
-`fakerphp` installed for running the provided unit tests.
+If using the library in a [Laravel](https://laravel.com) application, then
+you'll probably find it more convenient to install the companion package,
+[easyship-laravel](https://github.com/jrebs/easyship-laravel) (which will
+also require this package as a dependency).
+
+In this case, instead run:
+```sh
+composer require jrebs/easyship-laravel
+```
+See the [easyship-laravel](https://github.com/jrebs/easyship-laravel) page
+for documentation specific to this method.
 
 # Usage
 
@@ -123,11 +135,8 @@ See [WEBHOOKS.md](WEBHOOKS.md).
 
 ## Roadmap
 
-* **Coming Soon**
-  * supplemental package to for integrating into [Laravel](https://laravel.com) applications
-* **TBD**
-  * support for API `v2` once it is ready for production use.
-  * possibly support other HTTP clients by coding against a PSR interface
+* Support for API `v2` once it is ready for production use.
+* Support other HTTP clients by coding against a PSR interface
   instead of the Guzzle client directly
 
 ## Support

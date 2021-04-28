@@ -65,15 +65,18 @@ class EasyshipAPI
         string $method,
         string $endpoint,
         array $payload = null
-    ) : ResponseInterface {
+    ): ResponseInterface {
         $uri = $this->buildUri($this->apiHost, $endpoint);
-        $options = array_merge([
-            'headers' => [
+        $options = array_merge(
+            [
+                'headers' => [
                 'Authorization' => "Bearer {$this->apiToken}",
                 'Content-Type' => 'application/json',
+                ],
+                'http_errors' => true,
             ],
-            'http_errors' => true,
-        ], $this->options);
+            $this->options
+        );
         if ($payload) {
             if (strtolower($method) == 'get') {
                 $options['query'] = $payload;

@@ -18,7 +18,7 @@ class Pickups extends Module
      */
     public function get(string $courierId): ResponseInterface
     {
-        $endpoint = '/pickup/v1/pickup_slots/'.$courierId;
+        $endpoint = '/pickup/v1/pickup_slots/' . $courierId;
 
         return $this->easyship->request('get', $endpoint);
     }

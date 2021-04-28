@@ -170,8 +170,8 @@ class Handler
     public function extractEventTypeFromPayload(array $payload): string
     {
         if (
-            !array_key_exists('event_type', $payload) ||
-            !in_array($payload['event_type'], self::$webhookEventTypes)
+            !array_key_exists('event_type', $payload)
+            || !in_array($payload['event_type'], self::$webhookEventTypes)
         ) {
             throw new InvalidPayloadException(
                 'no valid event type found in webhook payload'
@@ -192,7 +192,7 @@ class Handler
     public static function addListener(
         string $eventType,
         ListenerInterface $listener
-    ) : void {
+    ): void {
         static::$listeners[$eventType][] = $listener;
     }
 }

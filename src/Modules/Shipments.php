@@ -18,7 +18,7 @@ class Shipments extends Module
      */
     public function get(string $shipmentId): ResponseInterface
     {
-        $endpoint = '/shipment/v1/shipments/'.$shipmentId;
+        $endpoint = '/shipment/v1/shipments/' . $shipmentId;
 
         return $this->easyship->request('get', $endpoint);
     }
@@ -81,7 +81,7 @@ class Shipments extends Module
      */
     public function update(string $shipmentId, array $payload): ResponseInterface
     {
-        $endpoint = '/shipment/v1/shipments/'.$shipmentId;
+        $endpoint = '/shipment/v1/shipments/' . $shipmentId;
 
         return $this->easyship->request('patch', $endpoint, $payload);
     }
@@ -97,7 +97,7 @@ class Shipments extends Module
      */
     public function delete(string $shipmentId): ResponseInterface
     {
-        $endpoint = '/shipment/v1/shipments/'.$shipmentId;
+        $endpoint = '/shipment/v1/shipments/' . $shipmentId;
 
         return $this->easyship->request('delete', $endpoint);
     }

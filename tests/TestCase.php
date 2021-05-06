@@ -7,6 +7,9 @@ use PHPUnit\Framework\TestCase as BaseTestCase;
 
 abstract class TestCase extends BaseTestCase
 {
+    /**
+     * @var \Faker\Generator
+     */
     protected $faker;
 
     protected function setUp(): void

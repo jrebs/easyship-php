@@ -12,15 +12,15 @@ class Tracking extends Module
      *
      * @link https://developers.easyship.com/v1.0/reference#status
      *
-     * @param array $payload
+     * @param string $shipmentId
      *
      * @return \Psr\Http\Message\ResponseInterface
      */
-    public function status(array $payload): ResponseInterface
+    public function status(string $shipmentId): ResponseInterface
     {
-        $endpoint = '/track/v1/status';
+        $endpoint = '/track/v1/status?easyship_shipment_id=' . $shipmentId;
 
-        return $this->easyship->request('get', $endpoint, $payload);
+        return $this->easyship->request('get', $endpoint);
     }
 
     /**
@@ -28,14 +28,14 @@ class Tracking extends Module
      *
      * @link https://developers.easyship.com/v1.0/reference#checkpoints
      *
-     * @param array $payload
+     * @param string $shipmentId
      *
      * @return \Psr\Http\Message\ResponseInterface
      */
-    public function checkpoints(array $payload): ResponseInterface
+    public function checkpoints(string $shipmentId): ResponseInterface
     {
-        $endpoint = '/track/v1/checkpoints';
+        $endpoint = '/track/v1/checkpoints?easyship_shipment_id=' . $shipmentId;
 
-        return $this->easyship->request('get', $endpoint, $payload);
+        return $this->easyship->request('get', $endpoint);
     }
 }

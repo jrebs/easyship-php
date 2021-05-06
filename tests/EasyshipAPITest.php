@@ -136,11 +136,12 @@ class EasyshipAPITest extends TestCase
             'http_errors' => 'true',
         ];
         $payload = [$this->faker->word => $this->faker->word];
-        $expected = array_merge($options, ['query' => $payload]);
         $mock = $this->createMock(\GuzzleHttp\Client::class);
         $mock->expects($this->once())
             ->method('request')
-            ->with('get', 'https://api.easyship.com/test', $expected);
+            ->with('get', 'https://api.easyship.com/test?' .
+                http_build_query($payload)
+            );
         $api = new EasyshipAPI($this->faker->word, $options);
         $api->setClient($mock);
         $api->request('get', 'test', $payload);

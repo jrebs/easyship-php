@@ -79,7 +79,7 @@ class EasyshipAPI
         );
         if ($payload) {
             if (strtolower($method) == 'get') {
-                $options['query'] = $payload;
+                $uri .= '?' . http_build_query($payload);
             } else {
                 $options['json'] = $payload;
             }

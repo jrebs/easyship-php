@@ -12,15 +12,16 @@ class Shipments extends Module
      *
      * @link https://developers.easyship.com/v1.0/reference#get-a-shipment
      *
-     * @param string $id
+     * @param string $shipmentId
+     * @param array $query Params to pass in the query string
      *
      * @return \Psr\Http\Message\ResponseInterface
      */
-    public function get(string $shipmentId): ResponseInterface
+    public function get(string $shipmentId, array $query = []): ResponseInterface
     {
         $endpoint = '/shipment/v1/shipments/' . $shipmentId;
 
-        return $this->easyship->request('get', $endpoint);
+        return $this->easyship->request('get', $endpoint, $query);
     }
 
     /**
@@ -30,11 +31,11 @@ class Shipments extends Module
      *
      * @return \Psr\Http\Message\ResponseInterface
      */
-    public function list(): ResponseInterface
+    public function list(array $query = []): ResponseInterface
     {
         $endpoint = '/shipment/v1/shipments';
 
-        return $this->easyship->request('get', $endpoint);
+        return $this->easyship->request('get', $endpoint, $query);
     }
 
     /**
@@ -74,7 +75,7 @@ class Shipments extends Module
      *
      * @link https://developers.easyship.com/v1.0/reference#update-a-shipment
      *
-     * @param string $id
+     * @param string $shipmentId
      * @param array $payload
      *
      * @return \Psr\Http\Message\ResponseInterface

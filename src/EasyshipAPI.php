@@ -40,7 +40,7 @@ class EasyshipAPI
      * @param string $apiToken
      * @param array $options An array of request options to be merged in
      */
-    public function __construct(string $apiToken, array $options = [])
+    public function __construct(string $apiToken = null, array $options = [])
     {
         $this->apiToken = $apiToken;
         $this->options = $options;

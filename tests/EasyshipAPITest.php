@@ -7,13 +7,6 @@ use GuzzleHttp\Client;
 
 class EasyshipAPITest extends TestCase
 {
-    public function test_constructor_requires_api_token()
-    {
-        $this->expectException(\ArgumentCountError::class);
-        $api = new EasyshipAPI();
-
-    }
-
     public function test_constructor_token_must_be_stringable()
     {
         $this->expectException(\TypeError::class);

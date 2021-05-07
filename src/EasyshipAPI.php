@@ -119,6 +119,17 @@ class EasyshipAPI
     }
 
     /**
+     * Update the api token used by this object.
+     *
+     * @param string $apiToken
+     * @return void
+     */
+    public function setApiToken(string $apiToken): void
+    {
+        $this->apiToken = $apiToken;
+    }
+
+    /**
      * Get an Http client to send API requests with. If none is already
      * available, an instance of GuzzleHttp/Client will be created.
      *

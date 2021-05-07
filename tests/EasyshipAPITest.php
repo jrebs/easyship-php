@@ -91,6 +91,34 @@ class EasyshipAPITest extends TestCase
         $api->request('test', 'test');
     }
 
+    public function test_overrides_token()
+    {
+        $originalToken = $this->faker->word;
+        $newToken = $this->faker->word;
+        $mock = $this->createMock(\GuzzleHttp\Client::class);
+        $match = 'Bearer ' . $newToken;
+        $mock->expects($this->once())
+            ->method('request')
+            ->with(
+                'test',
+                'https://api.easyship.com/test',
+                $this->callback(function ($data) use ($match) {
+                    if (!isset($data['headers']['Authorization'])) {
+                        return false;
+                    }
+                    if ($data['headers']['Authorization'] != $match) {
+                        return false;
+                    }
+
+                    return true;
+                }),
+        );
+        $api = new EasyshipAPI($originalToken);
+        $api->setApiToken($newToken);
+        $api->setClient($mock);
+        $api->request('test', 'test');
+    }
+
     public function test_merges_request_options()
     {
         $options = [

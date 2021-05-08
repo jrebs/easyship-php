@@ -30,7 +30,7 @@ class EasyshipAPI
     protected $apiHost = 'https://api.easyship.com';
 
     /**
-     * @var \GuzzleHttp\Client
+     * @var \Psr\Http\Client\ClientInterface
      */
     protected $client;
 
@@ -133,9 +133,9 @@ class EasyshipAPI
      * Get an Http client to send API requests with. If none is already
      * available, an instance of GuzzleHttp/Client will be created.
      *
-     * @return \GuzzleHttp\Client
+     * @return \Psr\Http\Client\ClientInterface
      */
-    public function getClient(): Client
+    public function getClient(): ClientInterface
     {
         if (!$this->client) {
             $this->client = new Client();
@@ -147,7 +147,7 @@ class EasyshipAPI
     /**
      * Pass in a compatible HTTP client object to be used.
      *
-     * @param ClientInterface $client
+     * @param \Psr\Http\Client\ClientInterface $client
      *
      * @return void
      */

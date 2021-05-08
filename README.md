@@ -89,11 +89,13 @@ passed into the `EasyshipAPI` constructor, if you prefer.
  * @throws \GuzzleHttp\Exception\ServerException on 500-level errors
  */
 ```
-
+Of course, if you're using another PSR7-compatible client, then you'll
+presumably get some exception based on `\RuntimeException`. Using other
+clients isn't fully tested but in theory should work.
 
 ## Configuration
 
-The only configuration requirement is an API access token, which you'll
+Typically the only thing you need is to configure an api key, which you'll
 get from your easyship account interface. If you haven't made one yet, go
 to https://app.easyship.com/connect and look for `API Integration` near the
 bottom of the list.
@@ -104,6 +106,9 @@ sandbox key and is the one you should use for testing and developing your
 integrations. It uses the same live endpoints but works off a separate set of
 test-only data.
 
+The apiToken on the EasyshipAPI is optional, as a single customer may often
+be making api calls with different tokens.
+
 #### Providing Request Options to the HTTP client
 
 The `EasyshipAPI` constructor accepts an array of request options that will
@@ -112,7 +117,7 @@ are sent to the API endpoints. See the
 [guzzle request options](https://docs.guzzlephp.org/en/stable/request-options.html) documentation for possibilities.
 
 ```php
-// Pass custom options that will be used by the Guzzle client
+// Pass custom options that will be used by the client
 $api = new Easyship\EasyshipAPI($token, [
     'verify' => false, // don't verify ssl certificate
     'connect_timeout' => 30, // wait maximum 30 seconds before giving up
@@ -136,8 +141,6 @@ See [WEBHOOKS.md](WEBHOOKS.md).
 ## Roadmap
 
 * Support for API `v2` once it is ready for production use.
-* Support other HTTP clients by coding against a PSR interface
-  instead of the Guzzle client directly
 
 ## Support
 

@@ -64,9 +64,31 @@ class EasyshipAPI
     public function request(
         string $method,
         string $endpoint,
-        array $payload = null
+        array $payload = []
     ): ResponseInterface {
         $uri = $this->buildUri($this->apiHost, $endpoint);
+        $request = $this->buildRequest($method, $uri, $payload);
+
+        return $this->submitRequest($request);
+    }
+
+    public function buildRequest(
+        string $method,
+        string $uri,
+        array $options = []
+    ): EasyshipRequest {
+        return new EasyshipRequest($method, $uri, $options);
+    }
+
+    /**
+     * Pass a request into the Guzzle client.
+     *
+     * @param EasyshipRequest $request
+     * @return \GuzzleHttp\Psr7\Response
+     */
+    public function submitRequest(EasyshipRequest $request): ResponseInterface
+    {
+        $uri = $request->getUri();
         $options = array_merge(
             [
                 'headers' => [
@@ -77,15 +99,19 @@ class EasyshipAPI
             ],
             $this->options
         );
-        if ($payload) {
-            if (strtolower($method) == 'get') {
-                $uri .= '?' . http_build_query($payload);
+        if ($request->getPayload()) {
+            if (strtolower($request->getMethod()) == 'get') {
+                $uri .= '?' . http_build_query($request->getPayload());
             } else {
-                $options['json'] = $payload;
+                $options['json'] = $request->getPayload();
             }
         }
 
-        return $this->getClient()->request($method, $uri, $options);
+        return $this->getClient()->request(
+            $request->getMethod(),
+            $uri,
+            $options
+        );
     }
 
     /**

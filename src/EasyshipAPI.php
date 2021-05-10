@@ -35,6 +35,11 @@ class EasyshipAPI
     protected $client;
 
     /**
+     * @var \Easyship\EasyshipRequest
+     */
+    protected $lastRequest;
+
+    /**
      * @link https://docs.guzzlephp.org/en/stable/request-options.html
      *
      * @param string $apiToken
@@ -68,6 +73,7 @@ class EasyshipAPI
     ): ResponseInterface {
         $uri = $this->buildUri($this->apiHost, $endpoint);
         $request = $this->buildRequest($method, $uri, $payload);
+        $this->lastRequest = $request;
 
         return $this->submitRequest($request);
     }
@@ -180,6 +186,16 @@ class EasyshipAPI
     public function setClient(ClientInterface $client): void
     {
         $this->client = $client;
+    }
+
+    /**
+     * Return the last request that was sent.
+     *
+     * @return \Easyship\EasyshipRequest
+     */
+    public function getLastRequest(): EasyshipRequest
+    {
+        return $this->lastRequest;
     }
 
     /**

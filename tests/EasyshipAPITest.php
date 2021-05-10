@@ -3,6 +3,7 @@
 namespace Easyship\Tests;
 
 use Easyship\EasyshipAPI;
+use Easyship\EasyshipRequest;
 use GuzzleHttp\Client;
 
 class EasyshipAPITest extends TestCase
@@ -166,6 +167,26 @@ class EasyshipAPITest extends TestCase
         $api = new EasyshipAPI($this->faker->word, $options);
         $api->setClient($mock);
         $api->request('get', 'test', $payload);
+    }
+
+    public function test_gets_last_request()
+    {
+        $options = [
+            'headers' => $this->faker->word,
+            'test' => $this->faker->word,
+            'http_errors' => 'true',
+        ];
+        $payload = [$this->faker->word => $this->faker->word];
+        $mock = $this->createMock(\GuzzleHttp\Client::class);
+        $mock->expects($this->once())
+            ->method('request')
+            ->with('get', 'https://api.easyship.com/test?' .
+                http_build_query($payload)
+            );
+        $api = new EasyshipAPI($this->faker->word, $options);
+        $api->setClient($mock);
+        $api->request('get', 'test', $payload);
+        $this->assertInstanceOf(EasyshipRequest::class, $api->getLastRequest());
     }
 
     public function test_gets_categories_module()

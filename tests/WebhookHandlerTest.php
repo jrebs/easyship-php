@@ -12,30 +12,6 @@ use TypeError;
 
 class WebhookHandlerTest extends TestCase
 {
-    public function test_sets_jwt_validator()
-    {
-        $handler = new Handler($this->faker->word);
-        // Incorrect object type throws TypeError
-        $this->expectException(\TypeError::class);
-        $handler->setJwtValidator(new \stdClass());
-        // Correct object type doesn't fuss
-        $exceptionThrown = false;
-        try {
-            $jwt = new JWT($this->faker->word);
-        } catch (\Throwable $e) {
-            $exceptionThrown = true;
-        }
-        $this->assertFalse($exceptionThrown);
-    }
-
-    public function test_gets_jwt_validator()
-    {
-        $handler = new Handler($this->faker->word);
-        $jwt = new JWT($this->faker->word);
-        $handler->setJwtValidator($jwt);
-        $this->assertEquals($jwt, $handler->getJwtValidator());
-    }
-
     public function test_validates_signatures_bad()
     {
         $key = $this->faker->word;

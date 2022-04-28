@@ -10,9 +10,9 @@ use Easyship\Exceptions\InvalidSignatureException;
 class Handler
 {
     /**
-     * @var string
+     * @var string[]
      */
-    protected $secretKey;
+    protected array $secretKeys;
 
     /**
      * @var \Ahc\Jwt\JWT
@@ -20,7 +20,7 @@ class Handler
     protected $jwt;
 
     /**
-     * @var array
+     * @var string[]
      */
     protected static $webhookEventTypes = [
         'shipment.label.created',
@@ -36,12 +36,9 @@ class Handler
      */
     protected static $listeners = [];
 
-    /**
-     * @param string $secretKey
-     */
-    public function __construct(string $secretKey = null)
+    public function __construct(string ...$secretKeys)
     {
-        $this->secretKey = $secretKey;
+        $this->secretKeys = $secretKeys;
     }
 
     /**
@@ -65,9 +62,7 @@ class Handler
      *
      * @param string $signature The value of the X-EAYSHIP-SIGNATURE header
      * @param array $payload The decoded json body of the post
-     *
      * @return void
-     *
      * @throws \Easyship\Exceptions\InvalidSignatureException
      * @throws \Easyship\Exceptions\InvalidPayloadException
      */
@@ -95,7 +90,6 @@ class Handler
      *
      * @param string $eventType
      * @param array $payload
-     *
      * @return void
      */
     public function fireEvent(string $eventType, array $payload): void
@@ -109,28 +103,12 @@ class Handler
     }
 
     /**
-     * Get a reference to the JWT object for validating tokens or make one
-     * if we don't have one yet.
-     *
-     * @return JWT
-     */
-    public function getJwtValidator(): JWT
-    {
-        if (!$this->jwt) {
-            $this->jwt = new JWT($this->secretKey);
-        }
-
-        return $this->jwt;
-    }
-
-    /**
      * Manually feed a JWT validator into this object so that getJwtValidator
      * will return this object instead of newing one up. The only reason we
      * don't just make the validator in the validateSignature method is
      * so that we can pass a mocked object in for the purpose of testing.
      *
      * @param JWT $jwt
-     *
      * @return void
      */
     public function setJwtValidator(JWT $jwt): void
@@ -142,18 +120,37 @@ class Handler
      * Verify an easyship signature using the secretKey to decode it.
      *
      * @param string $signature
-     *
      * @return void
-     *
      * @throws \easyship\Exceptions\InvalidSignatureException
      */
     public function validateSignature(string $signature): void
     {
-        try {
-            $this->getJwtValidator()->decode($signature, true);
-        } catch (JWTException $e) {
-            throw new InvalidSignatureException($e->getMessage());
+        foreach ($this->secretKeys as $secretKey) {
+            if ($this->testSignature($secretKey, $signature)) {
+                return;
+            }
         }
+
+        throw new InvalidSignatureException('No keys validated signature');
+    }
+
+    /**
+     * Test a given signature against a secret key using the JWT library.
+     *
+     * @param string $secretKey
+     * @param string $signature
+     * @return boolean
+     */
+    public function testSignature(string $secretKey, string $signature): bool
+    {
+        $jwt = $this->jwt ?? new JWT($secretKey);
+        try {
+            $jwt->decode($signature,true);
+        } catch (JWTException $e) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -162,9 +159,7 @@ class Handler
      * throw an exception.
      *
      * @param array $payload
-     *
      * @return string
-     *
      * @throws \Easyship\Exceptions\InvalidPayloadException
      */
     public function extractEventTypeFromPayload(array $payload): string
@@ -186,7 +181,6 @@ class Handler
      *
      * @param string $eventType
      * @param ListenerInterface $listener
-     *
      * @return void
      */
     public static function addListener(

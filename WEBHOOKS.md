@@ -21,12 +21,22 @@ setting up a webhook. The webhook secret will always start with `webh_`.
 ```php
 // A theoretical example in a Laravel routes/web.api file
 Route::post('/easyship/webhook', function (\Illuminate\Http\Request $request) {
-    $handler = new \Easyship\Webhooks\Handler(config('easyship.webhook_secret'));
+    $handler = new \Easyship\Webhooks\Handler(
+        ...config('easyship.webhook_secrets')
+    );
     $handler->handle(
         $request->header('X-EASYSHIP-SIGNATURE'),
         $request->input() // the Request object decoded the JSON in advance
     );
 });
+```
+
+The webhook handler supports multiple webhook secret keys so that one endpoint
+can accept incoming hooks from multiple distinct Easyship accounts. Simply
+add each webhook secret as another argument to the constructor.
+
+```php
+$handler = new \Easyship\Webhooks\Handler($secretKey1, $secretKey2);
 ```
 
 Note that the above example demonstrates how you can setup the Handler and

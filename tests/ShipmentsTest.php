@@ -14,7 +14,7 @@ class ShipmentsTest extends TestCase
             ->method('request')
             ->with(
                 'get',
-                'https://api.easyship.com/shipment/v1/shipments/'.$shipmentId
+                'https://api.easyship.com/2023-01/shipments/'.$shipmentId
             );
         $api = new EasyshipAPI($this->faker->word);
         $api->setClient($mock);
@@ -26,7 +26,7 @@ class ShipmentsTest extends TestCase
         $mock = $this->createMock(\GuzzleHttp\Client::class);
         $mock->expects($this->once())
             ->method('request')
-            ->with('get', 'https://api.easyship.com/shipment/v1/shipments');
+            ->with('get', 'https://api.easyship.com/2023-01/shipments');
         $api = new EasyshipAPI($this->faker->word);
         $api->setClient($mock);
         $api->shipments()->list();
@@ -37,24 +37,10 @@ class ShipmentsTest extends TestCase
         $mock = $this->createMock(\GuzzleHttp\Client::class);
         $mock->expects($this->once())
             ->method('request')
-            ->with('post', 'https://api.easyship.com/shipment/v1/shipments');
+            ->with('post', 'https://api.easyship.com/2023-01/shipments');
         $api = new EasyshipAPI($this->faker->word);
         $api->setClient($mock);
         $api->shipments()->create([]);
-    }
-
-    public function test_creates_shipment_and_buys_labels()
-    {
-        $mock = $this->createMock(\GuzzleHttp\Client::class);
-        $mock->expects($this->once())
-            ->method('request')
-            ->with(
-                'post',
-                'https://api.easyship.com/shipment/v1/shipments/create_and_buy_label'
-            );
-        $api = new EasyshipAPI($this->faker->word);
-        $api->setClient($mock);
-        $api->shipments()->createAndBuyLabel([]);
     }
 
     public function test_updates_shipment()
@@ -65,7 +51,7 @@ class ShipmentsTest extends TestCase
             ->method('request')
             ->with(
                 'patch',
-                'https://api.easyship.com/shipment/v1/shipments/'.$shipmentId
+                'https://api.easyship.com/2023-01/shipments/'.$shipmentId
             );
         $api = new EasyshipAPI($this->faker->word);
         $api->setClient($mock);
@@ -80,7 +66,7 @@ class ShipmentsTest extends TestCase
             ->method('request')
             ->with(
                 'delete',
-                'https://api.easyship.com/shipment/v1/shipments/'.$shipmentId
+                'https://api.easyship.com/2023-01/shipments/'.$shipmentId
             );
         $api = new EasyshipAPI($this->faker->word);
         $api->setClient($mock);
@@ -93,11 +79,11 @@ class ShipmentsTest extends TestCase
         $mock->expects($this->once())
             ->method('request')
             ->with(
-                'patch',
-                'https://api.easyship.com/shipment/v1/shipments/update_warehouse_state'
+                'post',
+                'https://api.easyship.com/2023-01/shipments/warehouse_state_updates'
             );
         $api = new EasyshipAPI($this->faker->word);
         $api->setClient($mock);
-        $api->shipments()->updateWarehouseState([]);
+        $api->shipments()->warehouseStateUpdate([]);
     }
 }

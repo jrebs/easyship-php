@@ -2,13 +2,17 @@
 
 namespace Easyship;
 
-use Easyship\Modules\Categories;
-use Easyship\Modules\Labels;
-use Easyship\Modules\Pickups;
-use Easyship\Modules\Rates;
-use Easyship\Modules\Shipments;
-use Easyship\Modules\Tracking;
 use GuzzleHttp\Client;
+use Easyship\Modules\Boxes;
+use Easyship\Modules\Rates;
+use Easyship\Modules\Labels;
+use Easyship\Modules\Stores;
+use Easyship\Modules\Pickups;
+use Easyship\Modules\Couriers;
+use Easyship\Modules\Products;
+use Easyship\Modules\Addresses;
+use Easyship\Modules\Shipments;
+use Easyship\Modules\ItemCategories;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\ResponseInterface;
 
@@ -41,7 +45,6 @@ class EasyshipAPI
 
     /**
      * @link https://docs.guzzlephp.org/en/stable/request-options.html
-     *
      * @param string $apiToken
      * @param array $options An array of request options to be merged in
      */
@@ -59,9 +62,7 @@ class EasyshipAPI
      * @param string $method The HTTP method to be used
      * @param string $endpoint Full path to request excluding the host
      * @param array $payload An array of params
-     *
      * @return \Psr\Http\Message\ResponseInterface
-     *
      * @throws \GuzzleHttp\Exception\ConnectException on network error
      * @throws \GuzzleHttp\Exception\ClientException on 400-level errors
      * @throws \GuzzleHttp\Exception\ServerException on 500-level errors
@@ -126,7 +127,6 @@ class EasyshipAPI
      *
      * @param string $host
      * @param string $path
-     *
      * @return string
      */
     public function buildUri(string $host, string $path): string
@@ -142,7 +142,6 @@ class EasyshipAPI
      * Override the default Easyship API host for development/testing.
      *
      * @param string $apiHost
-     *
      * @return void
      */
     public function setApiHost(string $apiHost): void
@@ -180,7 +179,6 @@ class EasyshipAPI
      * Pass in a compatible HTTP client object to be used.
      *
      * @param \Psr\Http\Client\ClientInterface $client
-     *
      * @return void
      */
     public function setClient(ClientInterface $client): void
@@ -199,11 +197,35 @@ class EasyshipAPI
     }
 
     /**
+     * @return \Easyship\Modules\Addresses
+     */
+    public function addresses(): Addresses
+    {
+        return new Addresses($this);
+    }
+
+    /**
+     * @return \Easyship\Modules\Boxes
+     */
+    public function boxes(): Boxes
+    {
+        return new Boxes($this);
+    }
+
+    /**
      * @return \Easyship\Modules\Categories
      */
-    public function categories(): Categories
+    public function categories(): ItemCategories
     {
-        return new Categories($this);
+        return new ItemCategories($this);
+    }
+
+    /**
+     * @return \Easyship\Modules\Couriers
+     */
+    public function couriers(): Couriers
+    {
+        return new Couriers($this);
     }
 
     /**
@@ -223,6 +245,14 @@ class EasyshipAPI
     }
 
     /**
+     * @return \Easyship\Modules\Products
+     */
+    public function products(): Products
+    {
+        return new Products($this);
+    }
+
+    /**
      * @return \Easyship\Modules\Rates
      */
     public function rates(): Rates
@@ -239,10 +269,10 @@ class EasyshipAPI
     }
 
     /**
-     * @return \Easyship\Modules\Tracking
+     * @return \Easyship\Modules\Stores
      */
-    public function tracking(): Tracking
+    public function stores(): Stores
     {
-        return new Tracking($this);
+        return new Stores($this);
     }
 }

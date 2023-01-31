@@ -193,7 +193,7 @@ class EasyshipAPITest extends TestCase
     {
         $api = new EasyshipAPI($this->faker->word);
         $this->assertInstanceOf(
-            \Easyship\Modules\Categories::class,
+            \Easyship\Modules\ItemCategories::class,
             $api->categories()
         );
     }
@@ -231,15 +231,6 @@ class EasyshipAPITest extends TestCase
         $this->assertInstanceOf(
             \Easyship\Modules\Shipments::class,
             $api->shipments()
-        );
-    }
-
-    public function test_gets_tracking_module()
-    {
-        $api = new EasyshipAPI($this->faker->word);
-        $this->assertInstanceOf(
-            \Easyship\Modules\Tracking::class,
-            $api->tracking()
         );
     }
 }

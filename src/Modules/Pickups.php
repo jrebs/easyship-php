@@ -8,50 +8,34 @@ use Psr\Http\Message\ResponseInterface;
 class Pickups extends Module
 {
     /**
-     * Retrieve available pickup slots
+     * Create a pickup
      *
-     * @link https://developers.easyship.com/v1.0/reference#retrieve-available-pick-up-slots
-     *
-     * @param string $courierId
-     *
-     * @return \Psr\Http\Message\ResponseInterface
-     */
-    public function get(string $courierId): ResponseInterface
-    {
-        $endpoint = '/pickup/v1/pickup_slots/' . $courierId;
-
-        return $this->easyship->request('get', $endpoint);
-    }
-
-    /**
-     * Request a pickup
-     *
-     * @link https://developers.easyship.com/v1.0/reference#request-a-pickup
-     *
+     * @link https://developers.easyship.com/reference/pickups_create
      * @param array $payload
-     *
      * @return \Psr\Http\Message\ResponseInterface
      */
-    public function request(array $payload): ResponseInterface
+    public function create(array $payload): ResponseInterface
     {
-        $endpoint = '/pickup/v1/pickups';
+        $endpoint = sprintf('%s/pickups', self::API_VERSION);
 
         return $this->easyship->request('post', $endpoint, $payload);
     }
 
     /**
-     * Mark as directly handed over
+     * Cancel a pickup
      *
-     * @link https://developers.easyship.com/v1.0/reference#mark-as-handed-over
-     *
-     * @param array $payload
-     *
+     * @link https://developers.easyship.com/reference/pickups_cancel
+     * @param string $pickupId
      * @return \Psr\Http\Message\ResponseInterface
      */
-    public function handOver(array $payload): ResponseInterface
+    public function cancel(string $pickupId): ResponseInterface
     {
-        $endpoint = '/pickup/v1/direct_hand_over';
+        $endpoint = sprintf(
+            '%s/pickups/%s/cancel',
+            self::API_VERSION,
+            $pickupId
+        );
 
-        return $this->easyship->request('post', $endpoint, $payload);
+        return $this->easyship->request('post', $endpoint, []);
     }
 }

@@ -11,10 +11,10 @@ class LabelsTest extends TestCase
         $mock = $this->createMock(\GuzzleHttp\Client::class);
         $mock->expects($this->once())
             ->method('request')
-            ->with('post', 'https://api.easyship.com/label/v1/labels');
+            ->with('post', 'https://api.easyship.com/2023-01/labels');
         $api = new EasyshipAPI($this->faker->word);
         $api->setClient($mock);
-        $api->labels()->buy([
+        $api->labels()->create([
             ['easyship_shipment_id' => $this->faker->word]
         ]);
     }

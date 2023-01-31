@@ -20,9 +20,11 @@ if it's not part of your implementation plan.
 
 #### API Version
 
-Presently, only API version `v1` is supported, as the `v2` API is in beta
-and still not complete. Once `v2` is ready for production use, I'll expand
-this library to support that version as well.
+Until `v1.4`, this library only supported the Easyship API `v1`. `v2` was
+never supported because for the longest time it was incomplete and marked
+unstable. Since `v1.4` of this library, `v2023-01` is the only supported
+version. You can just install an earlier build if you need to use old calls
+for some reason.
 
 * [Installation](#installation)
 * [Usage](#usage)
@@ -67,7 +69,7 @@ $response = $api->categories()->list();
 $response = $api->shipments()->get('ESTEST10001');
 
 // Buy a label for a shipment
-$response = $api->labels()->buy(['easyship_shipment_id' => 'ESTEST10001']);
+$response = $api->labels()->request(['easyship_shipment_id' => 'ESTEST10001']);
 ```
 
 All methods return an instance of an object implementing
@@ -140,7 +142,7 @@ See [WEBHOOKS.md](WEBHOOKS.md).
 
 ## Roadmap
 
-* Support for API `v2` once it is ready for production use.
+* More complete/useful testing.
 
 ## Support
 

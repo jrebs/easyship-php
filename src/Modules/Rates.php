@@ -10,15 +10,13 @@ class Rates extends Module
     /**
      * Request rates and taxes for a theoretical shipment.
      *
-     * @link https://developers.easyship.com/v1.0/reference#request-rates-and-taxes
-     *
+     * @link https://developers.easyship.com/reference/rates_request
      * @param array $payload
-     *
      * @return \Psr\Http\Message\ResponseInterface
      */
-    public function get(array $payload): ResponseInterface
+    public function request(array $payload): ResponseInterface
     {
-        $endpoint = '/rate/v1/rates';
+        $endpoint = sprintf('%s/rates', self::API_VERSION);
 
         return $this->easyship->request('post', $endpoint, $payload);
     }

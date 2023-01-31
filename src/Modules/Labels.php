@@ -8,17 +8,18 @@ use Psr\Http\Message\ResponseInterface;
 class Labels extends Module
 {
     /**
-     * Confirm and buy labels
+     * With the Label resource, you can confirm a Shipment that was created
+     * using the Shipment API. Calling Buy Labels will confirm a Shipment
+     * with the selected Courier and begin generating the Label & Shipping
+     * Documents after checking your account’s balance is sufficient.
      *
-     * @link https://developers.easyship.com/v1.0/reference#confirm-and-buy-labels
-     *
+     * @link https://developers.easyship.com/reference/labels_create
      * @param array $payload
-     *
      * @return \Psr\Http\Message\ResponseInterface
      */
-    public function buy(array $payload): ResponseInterface
+    public function create(array $payload): ResponseInterface
     {
-        $endpoint = '/label/v1/labels';
+        $endpoint = sprintf('%s/labels', self::API_VERSION);
 
         return $this->easyship->request('post', $endpoint, $payload);
     }

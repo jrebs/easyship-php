@@ -12,9 +12,9 @@ class RatesTest extends TestCase
         $mock = $this->createMock(\GuzzleHttp\Client::class);
         $mock->expects($this->once())
             ->method('request')
-            ->with('post', 'https://api.easyship.com/rate/v1/rates');
+            ->with('post', 'https://api.easyship.com/2023-01/rates');
         $api = new EasyshipAPI($this->faker->word);
         $api->setClient($mock);
-        $api->rates()->get($payload);
+        $api->rates()->request($payload);
     }
 }

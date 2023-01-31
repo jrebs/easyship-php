@@ -5,18 +5,17 @@ namespace Easyship\Modules;
 use Easyship\Module;
 use Psr\Http\Message\ResponseInterface;
 
-class Categories extends Module
+class Boxes extends Module
 {
     /**
-     * Get a list of item categories
+     * Retrieve a list of available courier boxes and your own boxes.
      *
-     * @link https://developers.easyship.com/v1.0/reference#item-categories
-     *
+     * @link https://developers.easyship.com/reference/boxes_index
      * @return \Psr\Http\Message\ResponseInterface
      */
     public function list(): ResponseInterface
     {
-        $endpoint = '/reference/v1/categories';
+        $endpoint = sprintf('%s/boxes', self::API_VERSION);
 
         return $this->easyship->request('get', $endpoint);
     }

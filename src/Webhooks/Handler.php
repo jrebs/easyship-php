@@ -143,8 +143,8 @@ class Handler
      */
     public function testSignature(string $secretKey, string $signature): bool
     {
-        $jwt = $this->jwt ?? new JWT($secretKey);
         try {
+            $jwt = $this->jwt ?? new JWT($secretKey);
             $jwt->decode($signature,true);
         } catch (JWTException $e) {
             return false;
